@@ -1,5 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instaclone/pages/sign_up.dart';
+
+import '../model/user_model.dart';
+import '../servise/auth_servise.dart';
+import '../servise/prefs_servise.dart';
+import '../servise/utils_servise.dart';
+import 'homepage.dart';
 class SigInPage extends StatefulWidget {
   static final String id = "sigin_page";
   const SigInPage({Key? key}) : super(key: key);
@@ -11,8 +18,40 @@ class SigInPage extends StatefulWidget {
 class _SigInPageState extends State<SigInPage> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var isLoading = false;
   _callSignUpPage(){
     Navigator.pushReplacementNamed(context, SignUp.id);
+  }
+
+
+  _doSignIn() {
+    String email = emailController.text.toString().trim();
+    String password = passwordController.text.toString().trim();
+    if(email.isEmpty || password.isEmpty) return;
+
+    setState(() {
+      isLoading = true;
+    });
+    AuthService.signInUser(context, email, password).then((value) => {
+      _getFirebaseUser(value),
+    });
+  }
+
+  _getFirebaseUser(Map<String, User?>? map) async {
+    setState(() {
+      isLoading = false;
+    });
+    User?  firebaseUser;
+    print("zero=>>>>>>   $map");
+    if (map!.containsKey("Succes")) {
+      firebaseUser = map["Succes"];
+       await Prefs.saveUserId(firebaseUser!.uid);
+      Navigator.pushReplacementNamed(context, HomePage.id);
+    }else{
+        Utils.fireToast("Check email or password");
+      return;
+    }
+
   }
 
   @override
@@ -28,8 +67,8 @@ class _SigInPageState extends State<SigInPage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color.fromRGBO(193, 53, 132, 1),
-                  Color.fromRGBO(131, 58, 180, 1),
+                  Color.fromRGBO(252, 175, 69, 1),
+                  Color.fromRGBO(250, 153, 1, 1),
                 ]
             ),
           ),
@@ -87,27 +126,35 @@ class _SigInPageState extends State<SigInPage> {
                     ),
                   ),
                   SizedBox(height: 10,),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    height: 50,
-                    width: double.infinity,
-                    padding: EdgeInsets.all( 10,),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white54.withOpacity(0.2),width: 2
+                  GestureDetector(
+                    onTap:(){_doSignIn();},
+                    child:Container (
+                      alignment: Alignment.bottomCenter,
+                      height: 50,
+                      width: double.infinity,
+                      padding: EdgeInsets.all( 10,),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.white54.withOpacity(0.2),width: 2
+                        ),
+                        borderRadius: BorderRadius.circular(7),
                       ),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    child: Text(
-                      "Sign In",
-                      style: TextStyle(
-                        color: Colors.white,fontSize: 17
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(
+                            color: Colors.white,fontSize: 17
+                        ),
                       ),
                     ),
                   ),
 
+
                 ],
               ),
+              isLoading ?
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ):SizedBox.shrink(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(

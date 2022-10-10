@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:instaclone/pages/homepage.dart';
 import 'package:instaclone/pages/sign_in.dart';
 class Splashpage extends StatefulWidget {
   const Splashpage({Key? key}) : super(key: key);
@@ -13,10 +14,10 @@ class Splashpage extends StatefulWidget {
 class _SplashpageState extends State<Splashpage> {
   _initTimer(){
     Timer(Duration(seconds: 2),(){
-      _callSignInPage();
+      _callHomePage();
     });
   }
-  _callSignInPage(){
+  _callHomePage(){
     Navigator.pushReplacementNamed(context, SigInPage.id);
   }
   @override
@@ -37,8 +38,8 @@ class _SplashpageState extends State<Splashpage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.fromRGBO(193, 53, 132, 1),
-              Color.fromRGBO(131, 58, 180, 1),
+              Color.fromRGBO(252, 175, 69, 1),
+              Color.fromRGBO(250, 153, 1, 1),
             ]
           ),
         ),
