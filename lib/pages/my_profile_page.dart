@@ -144,6 +144,7 @@ setState(() {
         print("$fullname fulname" );
         email = user.email;
         print("$email email" );
+        print("${user.device_token} token" );
         followers_count=user.followers_count;
         following_count=user.followers_count;
         });

@@ -1,8 +1,10 @@
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:instaclone/servise/prefs_servise.dart';
 
@@ -75,6 +77,22 @@ class Utils {
             ],
           );
         });
+  }
+  static Future<void> showLocalNotification(Map<String, dynamic> message) async {
+    String title = message['title'];
+    String body = message['body'];
+
+    if(Platform.isAndroid){
+      title = message['notification']['title'];
+      body = message['notification']['body'];
+    }
+
+    var android = AndroidNotificationDetails('channelId', 'channelName');
+   // var iOS = IOSNotificationDetails();
+    var platform = NotificationDetails(android: android,);
+
+    int id = Random().nextInt(1000000000)+1;
+    await FlutterLocalNotificationsPlugin().show(id, title, body, platform);
   }
 
 

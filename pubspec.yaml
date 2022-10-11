@@ -22,6 +22,8 @@ dependencies:
   firebase_storage: ^10.3.8
   cloud_firestore: ^3.4.7
   device_info_plus: ^5.0.4
+  firebase_messaging: ^13.1.0
+  flutter_local_notifications: ^11.0.1
 
 
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instaclone/pages/my_feed_page.dart';
@@ -5,6 +6,8 @@ import 'package:instaclone/pages/my_likes_page.dart';
 import 'package:instaclone/pages/my_profile_page.dart';
 import 'package:instaclone/pages/my_search_page.dart';
 import 'package:instaclone/pages/my_upload_page.dart';
+
+import '../servise/utils_servise.dart';
 class HomePage extends StatefulWidget {
   static final String id = "homepage";
   const HomePage({Key? key}) : super(key: key);
@@ -14,6 +17,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  FirebaseMessaging? firebaseMessaging;
+
+
+  _initNotification() {
+    firebaseMessaging = FirebaseMessaging.instance;
+         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          // fetchRideInfo(getRideID(message), context);
+              (Map<String, dynamic> message) async =>   Utils.showLocalNotification(message);
+        });
+
+
+      onLaunch: (Map<String, dynamic> message) async {
+        //print("onLaunch: $message");
+      };
+      onResume: (Map<String, dynamic> message) async {
+        //print("onResume: $message");
+      };
+
+  }
+
+
   late PageController _pageController;
   int _curretTab = 0;
   @override
